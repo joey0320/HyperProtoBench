@@ -16,6 +16,8 @@ syntax = "proto2";
 
 package hyperprotobench;
 
+option cc_enable_arenas = true;
+
 message M1 {
   message M2 {
     optional int64 f1 = 3;

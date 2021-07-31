@@ -746,6 +746,9 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M52_Set_F1(m52_messages[i], m52_other_messages[i], &m52_strings[i]);
   };
   // PRE_SER_HOOK;
+  auto t1 = std::chrono::steady_clock::now();
+  // PRE_SER2_HOOK;
+
   for (const auto& i : indices) {
     M1_Serialize_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -777,6 +780,60 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M52_Serialize_F1(m52_messages[i], m52_other_messages[i], &m52_strings[i]);
   };
   // PRE_DES_HOOK;
+  auto t2 = std::chrono::steady_clock::now();
+
+  const char * serializeoutputs[10];
+  size_t lengths[10];
+
+  serializeoutputs[0] = m1_strings[0].c_str();
+  serializeoutputs[1] = m10_strings[0].c_str();
+  serializeoutputs[2] = m15_strings[0].c_str();
+  serializeoutputs[3] = m21_strings[0].c_str();
+  serializeoutputs[4] = m25_strings[0].c_str();
+  serializeoutputs[5] = m30_strings[0].c_str();
+  serializeoutputs[6] = m36_strings[0].c_str();
+  serializeoutputs[7] = m42_strings[0].c_str();
+  serializeoutputs[8] = m48_strings[0].c_str();
+  serializeoutputs[9] = m52_strings[0].c_str();
+
+  lengths[0] = m1_strings[0].length();
+  lengths[1] = m10_strings[0].length();
+  lengths[2] = m15_strings[0].length();
+  lengths[3] = m21_strings[0].length();
+  lengths[4] = m25_strings[0].length();
+  lengths[5] = m30_strings[0].length();
+  lengths[6] = m36_strings[0].length();
+  lengths[7] = m42_strings[0].length();
+  lengths[8] = m48_strings[0].length();
+  lengths[9] = m52_strings[0].length();
+
+  for (int i = 0; i < 10; i++) {
+    size_t outlen = lengths[i];
+    std::cout << "b, " << outlen << "\n" << std::flush;
+  }
+
+  if (do_write) {
+#ifdef __riscv
+  FILE * outputfile = fopen("outputdata-rv", "w");
+#else
+  FILE * outputfile = fopen("outputdata", "w");
+#endif
+  for (int i = 0; i < 10; i++) {
+    fprintf(outputfile, "START_OUTPUT\n");
+    size_t outlen = lengths[i];
+    for (size_t q = 0; q < outlen; q++) {
+        uint8_t outval = (uint8_t)(serializeoutputs[i][q]);
+        fprintf(outputfile, "%02x\n", outval);
+    }
+    fprintf(outputfile, "END_OUTPUT\n");
+  }
+  fclose(outputfile);
+  }
+
+  // PRE_DES2_HOOK;
+  auto t3 = std::chrono::steady_clock::now();
+  // PRE_DES3_HOOK;
+
   for (const auto& i : indices) {
     M1_Deserialize_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -808,6 +865,12 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M52_Deserialize_F1(m52_messages[i], m52_other_messages[i], &m52_strings[i]);
   };
   // PRE_GET_HOOK;
+  auto t4 = std::chrono::steady_clock::now();
+  auto serduration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
+  auto desduration = std::chrono::duration_cast<std::chrono::microseconds>(t4-t3).count();
+  std::cout << serduration << " us ser\n" << desduration << " us des\n" << std::flush;
+  // PRE_GET2_HOOK;
+
   for (const auto& i : indices) {
     M1_Get_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };

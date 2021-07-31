@@ -16,6 +16,8 @@ syntax = "proto2";
 
 package hyperprotobench;
 
+option cc_enable_arenas = true;
+
 message M1 {
   enum E1 {
     E1_CONST_1 = 84;

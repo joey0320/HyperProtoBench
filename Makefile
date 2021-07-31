@@ -1,27 +1,39 @@
 
+MAINDIR=../../../../microbenchmarks
+X86INSTALLDIR=$(MAINDIR)/protobuf-x86-install
+RISCVINSTALLDIR=$(MAINDIR)/protobuf-riscv-install
 
-CXX=g++
-STRIP=strip
-CXXFLAGS=-O3 -std=c++11 -fno-omit-frame-pointer -static
-PROTOINCLUDES=~/protobuf/src
-INCLUDES = -I $(PROTOINCLUDES)
-PROTOLIB=-L $(PROTOINCLUDES)/.libs -l:libprotobuf.a
-OTHERLIBS=-lpthread
-PROTOCDIR=~/protobuf/src/protoc
+HOST_GCC_INSTALL=$(MAINDIR)/host-gcc-install
 
-objects = benchmark.o benchmark.pb.o
+PROTOC = $(X86INSTALLDIR)/bin/protoc
+RVCPP = riscv64-unknown-linux-gnu-g++
+RVSTRIP = riscv64-unknown-linux-gnu-strip
+X86CPP = $(HOST_GCC_INSTALL)/bin/g++
+X86STRIP = strip
 
-all: benchmark
+CPPFLAGS = -std=c++11 -O3 -g3 -static -D NDEBUG
+
+objectsx86 = benchmark.o.x86 benchmark.pb.o.x86
+objectsriscv = benchmark.o.riscv benchmark.pb.o.riscv accellib.o.riscv
+
+all: benchmark.riscv benchmark.x86
 
 benchmark.pb.cc: benchmark.proto
-	$(PROTOCDIR) $< --cpp_out=.
+	LD_LIBRARY_PATH=$(HOST_GCC_INSTALL)/lib64:$$LD_LIBRARY_PATH && $(PROTOC) $< --cpp_out=.
 
-%.o : %.cc benchmark.pb.cc benchmark.inc
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
+%.o.riscv : %.cc benchmark.pb.cc benchmark.inc
+	$(RVCPP) $(CPPFLAGS) -I $(RISCVINSTALLDIR)/include -pthread -c $< -o $@
 
-benchmark: $(objects)
-	$(CXX) $(CXXFLAGS)  $(objects) -o $@ $(PROTOLIB) $(OTHERLIBS)
-	$(STRIP) $@
+%.o.x86 : %.cc benchmark.pb.cc benchmark.inc
+	$(X86CPP) $(CPPFLAGS) -I $(X86INSTALLDIR)/include -pthread -c $< -o $@
+
+benchmark.x86: $(objectsx86)
+	$(X86CPP) $(CPPFLAGS)  $(objectsx86) -o $@ -pthread $(X86INSTALLDIR)/lib/libprotobuf.a
+	$(X86STRIP) $@
+
+benchmark.riscv: $(objectsriscv)
+	$(RVCPP) $(CPPFLAGS)  $(objectsriscv) -o $@ -pthread $(RISCVINSTALLDIR)/lib/libprotobuf.a
+	$(RVSTRIP) $@
 
 clean:
-	rm benchmark $(objects) benchmark.pb.cc benchmark.pb.h
+	rm benchmark.x86 benchmark.riscv $(objectsx86) $(objectsriscv) benchmark.pb.cc benchmark.pb.h

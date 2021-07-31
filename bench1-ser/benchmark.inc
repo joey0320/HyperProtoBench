@@ -557,6 +557,10 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M25_Create_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
   // PRE_SET_HOOK;
+  std::cout << "s1\n" << std::flush;
+  volatile char ** serializeoutputs = AccelSetupSerializer();
+  std::cout << "s2\n" << std::flush;
+
   for (const auto& i : indices) {
     M1_Set_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -587,7 +591,11 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
   for (const auto& i : indices) {
     M25_Set_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
-  // PRE_SER_HOOK;
+  std::cout << "s3\n" << std::flush;
+
+  auto t1 = std::chrono::steady_clock::now();
+  // PRE_SER2_HOOK;
+
   for (const auto& i : indices) {
     M1_Serialize_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -618,7 +626,49 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
   for (const auto& i : indices) {
     M25_Serialize_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
-  // PRE_DES_HOOK;
+  volatile char* serres = BlockOnSerializedValue(serializeoutputs, 9);
+  size_t strlen = GetSerializedLength(serializeoutputs, 9);
+
+  auto t2 = std::chrono::steady_clock::now();
+  std::cout << "s4\n" << std::flush;
+
+  for (int i = 0; i < 10; i++) {
+    size_t outlen = GetSerializedLength(serializeoutputs, i);
+    std::cout << "b, " << outlen << "\n" << std::flush;
+  }
+
+    m1_strings[0] = std::string((char*)serializeoutputs[0], GetSerializedLength(serializeoutputs, 0));
+    m3_strings[0] = std::string((char*)serializeoutputs[1], GetSerializedLength(serializeoutputs, 1));
+    m5_strings[0] = std::string((char*)serializeoutputs[2], GetSerializedLength(serializeoutputs, 2));
+    m9_strings[0] = std::string((char*)serializeoutputs[3], GetSerializedLength(serializeoutputs, 3));
+    m13_strings[0] = std::string((char*)serializeoutputs[4], GetSerializedLength(serializeoutputs, 4));
+    m15_strings[0] = std::string((char*)serializeoutputs[5], GetSerializedLength(serializeoutputs, 5));
+    m17_strings[0] = std::string((char*)serializeoutputs[6], GetSerializedLength(serializeoutputs, 6));
+    m19_strings[0] = std::string((char*)serializeoutputs[7], GetSerializedLength(serializeoutputs, 7));
+    m23_strings[0] = std::string((char*)serializeoutputs[8], GetSerializedLength(serializeoutputs, 8));
+    m25_strings[0] = std::string((char*)serializeoutputs[9], GetSerializedLength(serializeoutputs, 9));
+
+  if (do_write) {
+#ifdef __riscv
+  FILE * outputfile = fopen("/root/outputdata", "w");
+#else
+  FILE * outputfile = fopen("outputdata", "w");
+#endif
+  for (int i = 0; i < 10; i++) {
+    fprintf(outputfile, "START_OUTPUT\n");
+    size_t outlen = GetSerializedLength(serializeoutputs, i);
+    for (size_t q = 0; q < outlen; q++) {
+        uint8_t outval = (uint8_t)(serializeoutputs[i][q]);
+        fprintf(outputfile, "%02x\n", outval);
+    }
+    fprintf(outputfile, "END_OUTPUT\n");
+  }
+  fclose(outputfile);
+  }
+
+  auto t3 = std::chrono::steady_clock::now();
+  // PRE_DES3_HOOK;
+
   for (const auto& i : indices) {
     M1_Deserialize_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -650,6 +700,12 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M25_Deserialize_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
   // PRE_GET_HOOK;
+  auto t4 = std::chrono::steady_clock::now();
+  auto serduration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
+  auto desduration = std::chrono::duration_cast<std::chrono::microseconds>(t4-t3).count();
+  std::cout << serduration << " us ser\n" << desduration << " us des\n" << std::flush;
+  // PRE_GET2_HOOK;
+
   for (const auto& i : indices) {
     M1_Get_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };

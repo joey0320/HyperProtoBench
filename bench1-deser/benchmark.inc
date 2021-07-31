@@ -557,6 +557,10 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M25_Create_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
   // PRE_SET_HOOK;
+  std::cout << "s1\n" << std::flush;
+  AccelSetup();
+  std::cout << "s2\n" << std::flush;
+
   for (const auto& i : indices) {
     M1_Set_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -587,7 +591,11 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
   for (const auto& i : indices) {
     M25_Set_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
-  // PRE_SER_HOOK;
+  std::cout << "s3\n" << std::flush;
+
+  auto t1 = std::chrono::steady_clock::now();
+  // PRE_SER2_HOOK;
+
   for (const auto& i : indices) {
     M1_Serialize_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -619,6 +627,13 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
     M25_Serialize_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
   // PRE_DES_HOOK;
+  auto t2 = std::chrono::steady_clock::now();
+  std::cout << "s4\n" << std::flush;
+
+  auto t3 = std::chrono::steady_clock::now();
+  asm volatile ("fence");
+
+
   for (const auto& i : indices) {
     M1_Deserialize_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -649,7 +664,14 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
   for (const auto& i : indices) {
     M25_Deserialize_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
-  // PRE_GET_HOOK;
+  block_on_completion();
+
+  auto t4 = std::chrono::steady_clock::now();
+  auto serduration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
+  auto desduration = std::chrono::duration_cast<std::chrono::microseconds>(t4-t3).count();
+  std::cout << serduration << " us ser\n" << desduration << " us des\n" << std::flush;
+  // PRE_GET2_HOOK;
+
   for (const auto& i : indices) {
     M1_Get_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };
@@ -680,6 +702,97 @@ inline int BenchmarkIteration(uint32_t working_set_size, google::protobuf::Arena
   for (const auto& i : indices) {
     M25_Get_F1(m25_messages[i], m25_other_messages[i], &m25_strings[i]);
   };
+
+  m1_strings[0] = "";
+  m3_strings[0] = "";
+  m5_strings[0] = "";
+  m9_strings[0] = "";
+  m13_strings[0] = "";
+  m15_strings[0] = "";
+  m17_strings[0] = "";
+  m19_strings[0] = "";
+  m23_strings[0] = "";
+  m25_strings[0] = "";
+
+  for (const auto& i : indices) {
+    M1_Serialize_F1(m1_other_messages[i], m1_messages[i], &m1_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M3_Serialize_F1(m3_other_messages[i], m3_messages[i], &m3_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M5_Serialize_F1(m5_other_messages[i], m5_messages[i], &m5_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M9_Serialize_F1(m9_other_messages[i], m9_messages[i], &m9_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M13_Serialize_F1(m13_other_messages[i], m13_messages[i], &m13_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M15_Serialize_F1(m15_other_messages[i], m15_messages[i], &m15_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M17_Serialize_F1(m17_other_messages[i], m17_messages[i], &m17_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M19_Serialize_F1(m19_other_messages[i], m19_messages[i], &m19_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M23_Serialize_F1(m23_other_messages[i], m23_messages[i], &m23_strings[i]);
+  };
+  for (const auto& i : indices) {
+    M25_Serialize_F1(m25_other_messages[i], m25_messages[i], &m25_strings[i]);
+  };
+
+  const char * serializeoutputs[10];
+  size_t lengths[10];
+
+  serializeoutputs[0] = m1_strings[0].c_str();
+  serializeoutputs[1] = m3_strings[0].c_str();
+  serializeoutputs[2] = m5_strings[0].c_str();
+  serializeoutputs[3] = m9_strings[0].c_str();
+  serializeoutputs[4] = m13_strings[0].c_str();
+  serializeoutputs[5] = m15_strings[0].c_str();
+  serializeoutputs[6] = m17_strings[0].c_str();
+  serializeoutputs[7] = m19_strings[0].c_str();
+  serializeoutputs[8] = m23_strings[0].c_str();
+  serializeoutputs[9] = m25_strings[0].c_str();
+
+  lengths[0] = m1_strings[0].length();
+  lengths[1] = m3_strings[0].length();
+  lengths[2] = m5_strings[0].length();
+  lengths[3] = m9_strings[0].length();
+  lengths[4] = m13_strings[0].length();
+  lengths[5] = m15_strings[0].length();
+  lengths[6] = m17_strings[0].length();
+  lengths[7] = m19_strings[0].length();
+  lengths[8] = m23_strings[0].length();
+  lengths[9] = m25_strings[0].length();
+
+  for (int i = 0; i < 10; i++) {
+    size_t outlen = lengths[i];
+    std::cout << "b, " << outlen << "\n" << std::flush;
+  }
+
+  if (do_write) {
+#ifdef __riscv
+  FILE * outputfile = fopen("/root/outputdata", "w");
+#else
+  FILE * outputfile = fopen("outputdata", "w");
+#endif
+  for (int i = 0; i < 10; i++) {
+    fprintf(outputfile, "START_OUTPUT\n");
+    size_t outlen = lengths[i];
+    for (size_t q = 0; q < outlen; q++) {
+        uint8_t outval = (uint8_t)(serializeoutputs[i][q]);
+        fprintf(outputfile, "%02x\n", outval);
+    }
+    fprintf(outputfile, "END_OUTPUT\n");
+  }
+  fclose(outputfile);
+  }
+
   for (const auto& i : indices) {
     M1_Destroy_F1(m1_messages[i], m1_other_messages[i], &m1_strings[i]);
   };

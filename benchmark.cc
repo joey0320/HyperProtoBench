@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 #include <algorithm>
 #include <array>
 #include <string>
@@ -21,6 +22,12 @@
 using std::string;
 
 #include "benchmark.pb.h"
+
+#ifdef __riscv
+#include "accellib.h"
+#endif
+
+bool do_write = false;
 
 namespace hyperprotobench {
 
@@ -97,6 +104,7 @@ inline void ReceiveUint64(const uint64_t& val) {
 #define WORKING_SET_SIZE 1
 
 int main(int argc, char** argv) {
+  do_write = argc == 2;
   int iters = 1;
   google::protobuf::Arena arena;
   google::protobuf::Arena* arena_p = &arena;
