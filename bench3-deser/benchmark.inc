@@ -17,8 +17,8 @@ int M11_Create_F1(M11* message, M11* other_message, std::string* serialized) {
 }
 
 int M11_Deserialize_F1(M11* message, M11* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M11, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M11, other_message, serialized);
   return 0;
 }
 
@@ -63,8 +63,8 @@ int M14_Create_F1(M14* message, M14* other_message, std::string* serialized) {
 }
 
 int M14_Deserialize_F1(M14* message, M14* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M14, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M14, other_message, serialized);
   return 0;
 }
 
@@ -101,8 +101,8 @@ int M17_Create_F1(M17* message, M17* other_message, std::string* serialized) {
 }
 
 int M17_Deserialize_F1(M17* message, M17* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M17, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M17, other_message, serialized);
   return 0;
 }
 
@@ -150,8 +150,8 @@ int M19_Create_F1(M19* message, M19* other_message, std::string* serialized) {
 }
 
 int M19_Deserialize_F1(M19* message, M19* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M19, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M19, other_message, serialized);
   return 0;
 }
 
@@ -190,8 +190,8 @@ int M1_Create_F1(M1* message, M1* other_message, std::string* serialized) {
 }
 
 int M1_Deserialize_F1(M1* message, M1* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M1, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M1, other_message, serialized);
   return 0;
 }
 
@@ -237,8 +237,8 @@ int M22_Create_F1(M22* message, M22* other_message, std::string* serialized) {
 }
 
 int M22_Deserialize_F1(M22* message, M22* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M22, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M22, other_message, serialized);
   return 0;
 }
 
@@ -280,8 +280,8 @@ int M26_Create_F1(M26* message, M26* other_message, std::string* serialized) {
 }
 
 int M26_Deserialize_F1(M26* message, M26* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M26, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M26, other_message, serialized);
   return 0;
 }
 
@@ -329,8 +329,8 @@ int M3_Create_F1(M3* message, M3* other_message, std::string* serialized) {
 }
 
 int M3_Deserialize_F1(M3* message, M3* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M3, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M3, other_message, serialized);
   return 0;
 }
 
@@ -381,8 +381,8 @@ int M7_Create_F1(M7* message, M7* other_message, std::string* serialized) {
 }
 
 int M7_Deserialize_F1(M7* message, M7* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M7, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M7, other_message, serialized);
   return 0;
 }
 
@@ -414,8 +414,8 @@ int M9_Create_F1(M9* message, M9* other_message, std::string* serialized) {
 }
 
 int M9_Deserialize_F1(M9* message, M9* other_message, std::string* serialized) {
-  other_message->ParseFromString((*serialized));
-  // DESERIALIZEHOOK(hyperprotobench, M9, other_message, serialized);
+  //other_message->ParseFromString((*serialized));
+  AccelParseFromString(hyperprotobench, M9, other_message, serialized);
   return 0;
 }
 

@@ -31,8 +31,8 @@ int M10_Get_F1(M10* message, M10* other_message, std::string* serialized) {
 }
 
 int M10_Serialize_F1(M10* message, M10* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M10, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M10, message);
   return 0;
 }
 
@@ -82,8 +82,8 @@ int M15_Get_F1(M15* message, M15* other_message, std::string* serialized) {
 }
 
 int M15_Serialize_F1(M15* message, M15* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M15, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M15, message);
   return 0;
 }
 
@@ -137,8 +137,8 @@ int M1_Get_F1(M1* message, M1* other_message, std::string* serialized) {
 }
 
 int M1_Serialize_F1(M1* message, M1* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M1, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M1, message);
   return 0;
 }
 
@@ -210,8 +210,8 @@ int M21_Get_F1(M21* message, M21* other_message, std::string* serialized) {
 }
 
 int M21_Serialize_F1(M21* message, M21* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M21, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M21, message);
   return 0;
 }
 
@@ -280,8 +280,8 @@ int M25_Get_F1(M25* message, M25* other_message, std::string* serialized) {
 }
 
 int M25_Serialize_F1(M25* message, M25* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M25, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M25, message);
   return 0;
 }
 
@@ -343,8 +343,8 @@ int M30_Get_F1(M30* message, M30* other_message, std::string* serialized) {
 }
 
 int M30_Serialize_F1(M30* message, M30* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M30, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M30, message);
   return 0;
 }
 
@@ -403,8 +403,8 @@ int M36_Get_F1(M36* message, M36* other_message, std::string* serialized) {
 }
 
 int M36_Serialize_F1(M36* message, M36* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M36, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M36, message);
   return 0;
 }
 
@@ -470,8 +470,8 @@ int M42_Get_F1(M42* message, M42* other_message, std::string* serialized) {
 }
 
 int M42_Serialize_F1(M42* message, M42* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M42, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M42, message);
   return 0;
 }
 
@@ -540,8 +540,8 @@ int M48_Get_F1(M48* message, M48* other_message, std::string* serialized) {
 }
 
 int M48_Serialize_F1(M48* message, M48* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M48, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M48, message);
   return 0;
 }
 
@@ -584,8 +584,8 @@ int M52_Get_F1(M52* message, M52* other_message, std::string* serialized) {
 }
 
 int M52_Serialize_F1(M52* message, M52* other_message, std::string* serialized) {
-  message->SerializeToString(serialized);
-  // SERIALIZEHOOK(hyperprotobench, M52, message);
+  //message->SerializeToString(serialized);
+  AccelSerializeToString(hyperprotobench, M52, message);
   return 0;
 }
 
