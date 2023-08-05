@@ -18,6 +18,20 @@ package hyperprotobench;
 
 option cc_enable_arenas = true;
 
+
+service HyperProtoBenchServer {
+  rpc Request1  (M1)  returns (M1) {}
+/* rpc Request2  (M10) returns (M10) {} */
+/* rpc Request3  (M15) returns (M15) {} */
+/* rpc Request4  (M21) returns (M21) {} */
+/* rpc Request5  (M25) returns (M25) {} */
+/* rpc Request6  (M30) returns (M30) {} */
+/* rpc Request7  (M36) returns (M36) {} */
+/* rpc Request8  (M42) returns (M42) {} */
+/* rpc Request9  (M48) returns (M48) {} */
+/* rpc Request10 (M52) returns (M52) {} */
+}
+
 message M1 {
   message M2 {
     optional int64 f1 = 3;
